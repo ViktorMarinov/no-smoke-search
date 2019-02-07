@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+{% block title %}Search Results{% endblock %}
+{% block content %}
+	<div class="container">
+		<div class="row">
+			<h2>No Smoke Search</h2>
+			 <div id="custom-search-input">
+						<form class="input-group col-md-12" action="/results" method="get">
+							<input
+								type="text"
+								name="search_query"
+								value="{{ search }}"
+								class="  search-query form-control"
+								placeholder="Search restaurant names or adress"
+							/>
+							<span class="input-group-btn">
+									<button class="btn btn-danger" type="submit">
+											<span class=" glyphicon glyphicon-search"></span>
+									</button>
+							</span>
+						</form>
+				</div>
+				<div class="results-list">
+					<ul>
+						{% for res in results %}
+            <li> {{ res }} </li>
+         {% endfor %}
+					</ul>
+				</div>
+		</div>
+	</div>
+{% endblock %}
