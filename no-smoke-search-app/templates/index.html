@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% block title %}No Smoke Search{% endblock %}
+{% block head %}
+  {{ super() }}
+  <style type="text/css">
+    .important { color: #336699; }
+  </style>
+{% endblock %}
+{% block content %}
+	<div class="container">
+		<div class="row">
+			<h2>No Smoke Search</h2>
+			 <div id="custom-search-input">
+						<form class="input-group col-md-12" action="/results" method="get">
+							<input
+								type="text"
+								name="search_query"
+								class="  search-query form-control"
+								placeholder="Search restaurant names or adress"
+							/>
+							<span class="input-group-btn">
+									<button class="btn btn-danger" type="submit">
+											<span class=" glyphicon glyphicon-search"></span>
+									</button>
+							</span>
+						</form>
+				</div>
+		</div>
+	</div>
+{% endblock %}
