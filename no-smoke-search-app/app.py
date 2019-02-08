@@ -11,15 +11,19 @@ def index():
 def search_results():
     search_query = request.args.get('search_query')
 
-    parsed_query = parse_query(search_query)
-    results = find_matches(parsed_query)
-
+    words, suggestions = parse_query(search_query)
+    results = find_matches(words)
     items = rows_to_items(results)
 
-    for result in rows_to_items(results):
-        print(result)
+    # for result in rows_to_items(results):
+    #     print(result)
 
-    return render_template('results.html', search=search_query, items=items)
+    return render_template(
+        'results.html',
+        search=search_query,
+        items=items,
+        suggestion=" ".join(suggestions)
+    )
 
 
 def rows_to_items(results):
