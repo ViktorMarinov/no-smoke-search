@@ -1,29 +1,16 @@
-import pandas as pd
+from . import load_sample
 import nltk
-from nltk.tokenize import TweetTokenizer
 from operator import itemgetter
 from collections import defaultdict
-import numpy as np
 from functools import reduce
 import operator
-from os.path import join
 from fuzzywuzzy import fuzz
-
-sample = pd.read_json(join('..', 'data', 'ner', 'sample_100_pages_names_tokens.json'))
-
-columns_for_index = ['matched_name', 'matched_title_str', 'matched_title_2_str', 'location']
+from nltk.tokenize import TweetTokenizer
 
 tokenizer = TweetTokenizer(preserve_case=False, strip_handles=True)
 
-sample[columns_for_index] = sample[columns_for_index].fillna("")
-
-for col in columns_for_index:
-    sample[col + '_tokens'] = sample[col].apply(tokenizer.tokenize)
-
-sample['tokens'] = (sample['matched_name_tokens'] +
-                   sample['matched_title_str_tokens'] +
-                   sample['matched_title_2_str_tokens'] +
-                   sample['location_tokens'])
+sample = load_sample.sample
+ids_to_rows = load_sample.ids_to_rows
 
 def get_report(row):
     return row[1]
@@ -38,6 +25,7 @@ def get_token_report_id_pairs(reports):
     
 token_id_pairs = get_token_report_id_pairs(map(get_report, sample[['id', 'tokens']].iterrows()))
 sorted_token_id = sorted(token_id_pairs, key=itemgetter(0))
+
 
 def merge_token_in_report(sorted_token_id):
     token_id_freq = []
@@ -123,5 +111,5 @@ def find_matches(words):
     id_dict = and_query(words)
     sorted_by_freq = sorted(id_dict.items(), key=operator.itemgetter(1), reverse=True)
     ids = [id for id, freq in sorted_by_freq]
-    return sample[sample.apply(lambda x: x.id in ids, axis=1)]
+    return ids_to_rows(ids)
 

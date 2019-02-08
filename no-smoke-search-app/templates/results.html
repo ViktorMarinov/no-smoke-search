@@ -45,7 +45,11 @@
 							{% for token in item.tokens %}
 									<span class="label label-default">{{ token }}</span>
 							{% endfor %}
-							
+							<a
+								class="badge badge-info pull-right"
+								href="/duplicates?id={{ item.id }}" target="_blank">
+								Similar
+							</a>
 						</div>
 					{% endfor %}
 				  </div>
