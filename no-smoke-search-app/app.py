@@ -26,6 +26,7 @@ def rows_to_items(results):
     items = [row[1]for row in results.iterrows()]
     for item in items:
         item.tokens = set([t for t in item.tokens if len(t) > 1])
+        item.description = item.description.split('*')[0]
     return items
 
 
