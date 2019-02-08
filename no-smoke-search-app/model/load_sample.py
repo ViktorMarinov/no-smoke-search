@@ -3,7 +3,7 @@ import pandas as pd
 from fuzzywuzzy import fuzz
 from nltk.tokenize import TweetTokenizer
 
-sample = pd.read_json(join('..', 'data', 'ner', 'sample_100_pages_names_tokens.json'))
+sample = pd.read_json(join('..', 'data', 'ner', 'sample_full_names_tokens.json'))
 sample = sample.reset_index(drop=True)
 columns_for_index = ['matched_name', 'matched_title_str', 'matched_title_2_str', 'location']
 
