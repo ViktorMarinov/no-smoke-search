@@ -1,6 +1,7 @@
 from flask import Flask, url_for, render_template
 from flask import flash, render_template, request, redirect
 from model.inverse_index import parse_query, find_matches
+from model.duplicates import find_similar
 app = Flask(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
@@ -15,9 +16,6 @@ def search_results():
     results = find_matches(words)
     items = rows_to_items(results)
 
-    # for result in rows_to_items(results):
-    #     print(result)
-
     return render_template(
         'results.html',
         search=search_query,
@@ -25,6 +23,18 @@ def search_results():
         suggestion=" ".join(suggestions)
     )
 
+@app.route('/duplicates')
+def search_similar():
+    id = int(request.args.get('id'))
+    results = find_similar(id)
+    items = rows_to_items(results)
+    base_item = list(filter(lambda x: x.id == id, items))[0]
+
+    return render_template(
+        'duplicates.html',
+        base_item=base_item,
+        items=items
+    )
 
 def rows_to_items(results):
     items = [row[1]for row in results.iterrows()]

@@ -38,3 +38,14 @@
     .search-query:focus + button {
         z-index: 3;
     }
+
+    .list-group-item.active {
+        z-index: 2 !important;
+        /* color: #fff; */
+        background-color: #afb1b3 !important;
+    }
+
+    .badge-info {
+        background-color: #28c5e0 !important;
+    }
+    
