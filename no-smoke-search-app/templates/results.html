@@ -20,13 +20,29 @@
 							</span>
 						</form>
 				</div>
-				<div class="results-list">
-					<ul>
-						{% for res in results %}
-            <li> {{ res }} </li>
-         {% endfor %}
-					</ul>
-				</div>
+				<br/>
+				<div class="list-group">
+					{% if not items: %}
+						<p>No results found.</p>
+					{% endif %}
+					{% for item in items %}
+						<div
+						  class="list-group-item list-group-item-action flex-column align-items-start"
+						>
+							<div class="d-flex w-100 justify-content-between">
+								<a href="https://bezdim.org/signali/reports/view/{{ item.id }}" target="_blank">
+									<h5 class="mb-1">{{ item.title }}</h5>
+								</a>
+								<small>{{ item.location }}</small>
+							</div>
+							<p class="mb-1"> {{ item.description }}</p>
+							{% for token in item.tokens %}
+									<span class="label label-default">{{ token }}</span>
+							{% endfor %}
+							
+						</div>
+					{% endfor %}
+				  </div>
 		</div>
 	</div>
 {% endblock %}
