@@ -6,10 +6,12 @@ from collections import defaultdict
 import numpy as np
 from functools import reduce
 import operator
+from os.path import join
+from fuzzywuzzy import fuzz
 
-sample = pd.read_json('data/sample_100_pages_names.json')
+sample = pd.read_json(join('..', 'data', 'ner', 'sample_100_pages_names_tokens.json'))
 
-columns_for_index = ['matched_name', 'matched_title', 'matched_title_2', 'location']
+columns_for_index = ['matched_name', 'matched_title_str', 'matched_title_2_str', 'location']
 
 tokenizer = TweetTokenizer(preserve_case=False, strip_handles=True)
 
@@ -18,8 +20,11 @@ sample[columns_for_index] = sample[columns_for_index].fillna("")
 for col in columns_for_index:
     sample[col + '_tokens'] = sample[col].apply(tokenizer.tokenize)
 
-sample['tokens'] = sample['matched_name_tokens'] + sample['matched_title_tokens'] + sample['matched_title_2_tokens'] + sample['location_tokens']
-print(sample['location_tokens'])
+sample['tokens'] = (sample['matched_name_tokens'] +
+                   sample['matched_title_str_tokens'] +
+                   sample['matched_title_2_str_tokens'] +
+                   sample['location_tokens'])
+
 def get_report(row):
     return row[1]
 
@@ -68,17 +73,51 @@ def and_query(words):
     """
     Finds all the documents that contain all the words with the frequescies summed
     """
+    if not words:
+        return dict()
+
     occurences = [{id: freq for id, freq in postings[word]} for word in words]
     common = reduce(
         set.intersection,
         [{id for id, freq in occ.items()} for occ in occurences])
     return {id: sum([occ[id] for occ in occurences]) for id in common}
 
+names_tokens = (sample['matched_name_tokens'] +
+                   sample['matched_title_str_tokens'] +
+                   sample['matched_title_2_str_tokens'])
+matched_title_words = set(sum(list(names_tokens), []))
+location_words = set(sum(list(sample['location_tokens']), []))
+token_words = set(sum(list(sample['tokens']), []))
+
+def find_closest_word(word, words):
+    suggested_word = None
+    min_coeff = 70
+    for w in words:
+        fuzz_coeff = fuzz.ratio(w, word)
+        if fuzz_coeff > min_coeff:
+            min_coeff = fuzz_coeff
+            suggested_word = w
+    return suggested_word
 
 def parse_query(query_string):
     words = tokenizer.tokenize(query_string)
-    print("Searching for: ", words)
-    return words
+
+    words_to_use = []
+    suggestions = []
+    for w in words:
+        if w in token_words:
+            words_to_use.append(w)
+            suggestions.append(w)
+        else:
+            cw = (find_closest_word(w, matched_title_words)
+                or find_closest_word(w, location_words))
+            if cw: 
+                suggestions.append(cw)
+
+    if words_to_use == suggestions:
+        return words_to_use, []
+
+    return words_to_use, suggestions
     
 def find_matches(words):
     id_dict = and_query(words)
