@@ -18,6 +18,17 @@
 											<span class=" glyphicon glyphicon-search"></span>
 									</button>
 							</span>
+							with at least
+							<select name="n_reports">
+								{% for i in range(1, max_n_reports + 1) %}
+									{% if i == selected_n_reports %}
+										<option selected value="{{ i }}">{{ i }}</option>
+									{% else %}
+										<option value="{{ i }}">{{ i }}</option>
+									{% endif %}
+								{% endfor %}
+							</select>
+							reports
 						</form>
 				</div>
 				{% if suggestion: %}

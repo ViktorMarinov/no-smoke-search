@@ -23,6 +23,13 @@
 											<span class=" glyphicon glyphicon-search"></span>
 									</button>
 							</span>
+							with at least
+							<select name="n_reports">
+								{% for i in range(1, max_n_reports + 1) %}
+								<option value="{{ i }}">{{ i }}</option>
+								{% endfor %}
+							</select>
+							reports
 						</form>
 				</div>
 		</div>
