@@ -1,10 +1,10 @@
 {% extends "layout.html" %}
-{% block title %}Search Results{% endblock %}
+{% block title %}Group Search Results{% endblock %}
 {% block content %}
 	<div class="container">
 		<div class="row">
 			 <div id="custom-search-input">
-						<form class="input-group col-md-12" action="/results" method="get">
+						<form class="input-group col-md-12" action="/groups" method="get">
 							<input
 								type="text"
 								name="search_query"
@@ -17,12 +17,23 @@
 											<span class=" glyphicon glyphicon-search"></span>
 									</button>
 							</span>
+							with at least
+							<select name="n_reports">
+								{% for i in range(1, max_n_reports + 1) %}
+									{% if i == selected_n_reports %}
+										<option selected value="{{ i }}">{{ i }}</option>
+									{% else %}
+										<option value="{{ i }}">{{ i }}</option>
+									{% endif %}
+								{% endfor %}
+							</select>
+							reports
 						</form>
 				</div>
 				{% if suggestion: %}
 					<div class="alert alert-dark" role="alert">
 						Did you mean:
-						<a href="/results?search_query={{suggestion}}">{{ suggestion }}</a>
+						<a href="/groups?search_query={{suggestion}}&n_reports={{ selected_n_reports }}">{{ suggestion }}</a>
 					</div>
 				{% endif %}
 				<br/>
@@ -37,18 +48,19 @@
 							<div class="d-flex w-100 justify-content-between">
 								<a href="https://bezdim.org/signali/reports/view/{{ item.id }}" target="_blank">
 									<h5 class="mb-1">{{ item.title }}</h5>
-								</a>
-								<small>{{ item.location }}</small>
+                                </a>
+                                <small>{{ item.location }}</small>
+                                <a 
+                                    class="h4 pull-right" 
+                                    href="/duplicates?id={{ item.id }}" target="_blank"
+                                >
+                                    ({{ item.n_duplicates }} duplicates)
+                                </a>
 							</div>
 							<p class="mb-1"> {{ item.description }}</p>
 							{% for token in item.tokens %}
 									<span class="label label-default">{{ token }}</span>
 							{% endfor %}
-							<a
-								class="badge badge-info pull-right"
-								href="/duplicates?id={{ item.id }}" target="_blank">
-								Similar
-							</a>
 						</div>
 					{% endfor %}
 				  </div>

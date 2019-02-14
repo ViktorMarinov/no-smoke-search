@@ -70,14 +70,31 @@ def find_similar_2(id):
             
     return ixs_to_rows(list(ixs))
 
+def get_ix_group(ix):
+    for group in all_grs:
+        if ix in group:
+            return group
+    
+    return None
 
-# for group in all_grs:
-#     if 6184 in group:
-#         print(ixs_to_rows(list(group))[['id', 'tokens', 'title', 'location']])
+def find_groups_with_n_plus(n):
+    return list(filter(lambda x: len(x) >= n, all_grs))
 
+def find_if_in_groups_with_n_plus(n, ix):
+    return any(filter(lambda x: len(x) >= n and ix in x, all_grs))
 
-# def find_groups_with_n_plus(groups, n):
-#     return set(filter(lambda x: len(x) >= n, groups)) # can be changes to ==
+def get_groups_with_n_plus(rows, n):
+    res_groups = []
 
-# def find_if_in_groups_with_n_plus(groups, n, ix):
-#     return any(filter(lambda x: len(x) >= n and ix in x, groups))
+    for ix in rows.index:
+        if not any(map(lambda group: ix in group, res_groups)):
+            group = get_ix_group(ix)
+            if group and len(group) >= n:
+                res_groups.append(group)
+
+    return [ixs_to_rows(list(group)) for group in res_groups]
+
+# groups_10_plus = find_groups_with_n_plus(10)
+
+# for group in groups_10_plus:
+#     print(ixs_to_rows(list(group)))

@@ -10,6 +10,17 @@
     {% endblock %}
   </head>
   <body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="#">No Smoke Search</a>
+          </div>
+          <ul class="nav navbar-nav">
+            <li><a href="/">Home</a></li>
+            <li><a href="/groups">Groups</a></li>
+          </ul>
+        </div>
+      </nav>
     <div id="content">{% block content %}{% endblock %}</div>
     <div id="footer">
       {% block footer %}
