@@ -80,11 +80,12 @@ def get_dups_group_iter(tuples, ix):
 starters = set(map(lambda x: x[0], dup_pairs))
 
 def find_all_groups(tuples, ixs):
-    all_groups = dict()
+    all_groups = list()
     l = len(starters)
     for i, ix in enumerate(starters):
         print("{0:0.2f}".format(float(i) * 100/ l) , " %")
-        all_groups[ix] = get_dups_group_iter(dup_pairs, ix)
+        if not any(map(lambda group: ix in group, all_groups)):
+            all_groups.append(get_dups_group_iter(dup_pairs, ix))
         
     return all_groups
 
