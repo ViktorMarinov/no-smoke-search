@@ -27,7 +27,12 @@ def search_similar():
     id = int(request.args.get('id'))
     results = find_similar_2(id)
     items = rows_to_items(results)
-    base_item = list(filter(lambda x: x.id == id, items))[0]
+    duplicates = list(filter(lambda x: x.id == id, items))
+    base_item = None
+    if len(duplicates) > 0:
+        base_item = list(filter(lambda x: x.id == id, items))[0]
+
+    
 
     return render_template(
         'duplicates.html',

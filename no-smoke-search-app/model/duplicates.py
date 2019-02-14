@@ -61,7 +61,6 @@ print(time_now(), "Done...")
 
 def find_similar_2(id):
     ix = id_to_index(id)
-    print("Index of ", id, " is ", ix)
     ixs = set()
     for group in all_grs:
         if ix in group:
