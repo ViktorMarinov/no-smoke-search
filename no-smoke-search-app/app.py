@@ -44,9 +44,13 @@ def search_similar():
 def search_groups():
     search_query = request.args.get('search_query') or ''
     selected_n_reports = int(request.args.get('n_reports') or 0)
-    words, suggestions = parse_query(search_query)
-    results = find_matches(words)
-    groups = get_groups_with_n_plus(results, selected_n_reports)
+    suggestions = ''
+    if search_query:
+        words, suggestions = parse_query(search_query)
+        results = find_matches(words)
+        groups = get_groups_with_n_plus(selected_n_reports, results)
+    else:
+        groups = get_groups_with_n_plus(selected_n_reports)
    
     items = [group_to_item(group) for group in groups]
 
@@ -61,7 +65,6 @@ def search_groups():
 
 def group_to_item(group):
     first_row = next(group.iterrows())
-    print(first_row)
     item = first_row[1]
 
     item.n_duplicates = len(group)

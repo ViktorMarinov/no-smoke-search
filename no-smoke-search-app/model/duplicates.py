@@ -82,7 +82,7 @@ def find_groups_with_n_plus(n):
 def find_if_in_groups_with_n_plus(n, ix):
     return any(filter(lambda x: len(x) >= n and ix in x, all_grs))
 
-def get_groups_with_n_plus(rows, n):
+def get_groups_with_n_plus(n, rows=sample):
     res_groups = []
 
     for ix in rows.index:
@@ -91,9 +91,5 @@ def get_groups_with_n_plus(rows, n):
             if group and len(group) >= n:
                 res_groups.append(group)
 
+    res_groups = sorted(res_groups, key=lambda g: len(g), reverse=True)
     return [ixs_to_rows(list(group)) for group in res_groups]
-
-# groups_10_plus = find_groups_with_n_plus(10)
-
-# for group in groups_10_plus:
-#     print(ixs_to_rows(list(group)))
